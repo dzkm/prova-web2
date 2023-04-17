@@ -47,11 +47,11 @@ app.get('/:id', (req, res) => {
 app.post('/', function (req, res) {
     let nextid = jsonData.sort((a, b) => { a[1] - b[1] }).reverse()[0].id + 1;
     console.log(req.body);
-    jsonData.push(new Object({"id": nextid, "descricao": req.body.descricao, "preco": req.body.preco, "cores": req.body.cores}));
+    jsonData.push(new Object({ "id": nextid, "descricao": req.body.descricao, "preco": req.body.preco, "cores": req.body.cores }));
     let newProduct = jsonData.find(product => product.id == nextid);
-    if(newProduct){
+    if (newProduct) {
         res.status(200).send(newProduct);
-    }else{
+    } else {
         res.status(500).send("Error on inserting data.");
     }
 });
@@ -59,23 +59,23 @@ app.post('/', function (req, res) {
 app.put('/:id', function (req, res) {
     const { descricao, preco, cores } = req.body;
     let previousProduct = jsonData.find(product => product.id == req.params.id);
-    if(!previousProduct){
+    if (!previousProduct) {
         res.status(404).send("Product not found.");
         return;
     }
-    jsonData[jsonData.indexOf(previousProduct)] = {"id": previousProduct.id, "descricao": descricao, "preco": preco, "cores": cores};
+    jsonData[jsonData.indexOf(previousProduct)] = { "id": previousProduct.id, "descricao": descricao, "preco": preco, "cores": cores };
     let newProduct = jsonData.find(product => product.id == req.params.id);
     console.log("Updated product: " + newProduct);
-    res.json({"updated": newProduct, "previous": previousProduct});
+    res.json({ "updated": newProduct, "previous": previousProduct });
 });
 
 app.delete('/:id', function (req, res) {
     const { id } = req.params;
     let product = jsonData.find(product => product.id == id);
-    if(product){
+    if (product) {
         jsonData.splice(jsonData.indexOf(product), 1);
-        res.status(200).json({"deleted": product});
-    }else{
+        res.status(200).json({ "deleted": product });
+    } else {
         res.status(400).send("Bad request");
     }
 });
