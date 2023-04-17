@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const port = 3000
+app.use(express.json());
 
 
 var jsonData = [
@@ -42,9 +43,10 @@ app.get('/:id', (req, res) => {
     }
 });
 
-app.use(express.json());
+
 app.post('/', function (req, res) {
-    let nextid = jsonData.sort((a, b) => { a[1] - b[1] }).reverse()[0].id + 1
+    let nextid = jsonData.sort((a, b) => { a[1] - b[1] }).reverse()[0].id + 1;
+    console.log(req.body);
     jsonData.push(new Object({"id": nextid, "descricao": req.body.descricao, "preco": req.body.preco, "cores": req.body.cores}));
     let newProduct = jsonData[nextid-1];
     if(newProduct){
@@ -61,10 +63,10 @@ app.put('/:id', function (req, res) {
         res.status(404).send("Product not found.");
         return;
     }
-    jsonData[jsonData.indexOf(previousProduct)] = {"id": oldPerson.id, "descricao": descricao, "preco": preco, "cores": cores};
+    jsonData[jsonData.indexOf(previousProduct)] = {"id": previousProduct.id, "descricao": descricao, "preco": preco, "cores": cores};
     let newProduct = jsonData[req.params.id-1];
     console.log("Updated product: " + newProduct);
-    res.json({"updated": newPerson, "previous": oldPerson});
+    res.json({"updated": newProduct, "previous": previousProduct});
 });
 
 app.delete('/:id', function (req, res) {
